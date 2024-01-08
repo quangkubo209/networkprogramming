@@ -2,6 +2,8 @@ package com.example.demotest.controller;
 
 import com.example.demotest.model.User;
 import com.example.demotest.request.LoginRequest;
+import com.example.demotest.request.LogoutRequest;
+import com.example.demotest.response.LogoutResponse;
 import com.example.demotest.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -31,5 +33,23 @@ public class UserController {
         String token = userService.signIn(loginRequest.getUsername(), loginRequest.getPassword());
         return ResponseEntity.ok(token);
     }
+
+    @PostMapping("/logout")
+    public LogoutResponse logout(@RequestBody LogoutRequest request) {
+        // Thực hiện logic đăng xuất, ví dụ: kiểm tra session trong sessionDatabase
+        if (sessionDatabase.containsKey(request.getSession())) {
+            // Đăng xuất thành công
+            sessionDatabase.remove(request.getSession());
+            LogoutResponse response = new LogoutResponse();
+            response.setCode("LOGOUT_OK");
+            return response;
+        } else {
+            // Session không hợp lệ
+            LogoutResponse response = new LogoutResponse();
+            response.setCode("UNAUTHORIZED");
+            return response;
+        }
+    }
+
 
 // Other endpoints for user

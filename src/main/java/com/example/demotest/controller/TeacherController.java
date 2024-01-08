@@ -1,10 +1,7 @@
 package com.example.demotest.controller;
 
 import com.example.demotest.model.User;
-import com.example.demotest.request.DeclareSlotsRequest;
-import com.example.demotest.request.EditMeetingRequest;
-import com.example.demotest.request.LoginRequest;
-import com.example.demotest.request.ViewScheduleRequest;
+import com.example.demotest.request.*;
 import com.example.demotest.response.*;
 import com.example.demotest.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,6 +79,38 @@ public class TeacherController {
             response.setStatus("EDIT_MEETING_ERROR");
             response.setMessage("Failed to edit meeting");
         }
+
+        return response;
+    }
+
+    @PostMapping("/view-history-schedule")
+    public ViewHistoryScheduleResponse viewHistorySchedule(@RequestBody ViewHistoryScheduleRequest request) {
+        // Thực hiện logic để lấy lịch sử các cuộc họp trước đó dựa trên yêu cầu
+        ViewHistoryScheduleResponse response = new ViewHistoryScheduleResponse();
+        // Thực hiện đặt giá trị cho response (giả sử)
+        response.setCode("VIEW_HISTORY_SCHEDULE_OK");
+        // Set giả định cho danh sách các cuộc họp trước đó
+        List<MeetingDetails> meetingDetailsList = new ArrayList<>();
+        MeetingDetails meetingDetails = new MeetingDetails();
+        meetingDetails.setMeetingId("meeting_id");
+        meetingDetails.setStartTime("start_time");
+        meetingDetails.setEndTime("end_time");
+        // Set giả định cho danh sách sinh viên tham gia
+        List<StudentDetails> studentDetailsList = new ArrayList<>();
+        StudentDetails studentDetails = new StudentDetails();
+        studentDetails.setStudentName("student_name");
+        studentDetailsList.add(studentDetails);
+        meetingDetails.setListStudent(studentDetailsList);
+        meetingDetails.setMeetingMinutes("content");
+        meetingDetailsList.add(meetingDetails);
+        response.setLists(meetingDetailsList);
+        // Set giả định cho metadata
+        Metadata metadata = new Metadata();
+        metadata.setHasNextPage(true);
+        metadata.setHasPreviousPage(false);
+        metadata.setTotalPage(1);
+        metadata.setTotalRow(5);
+        response.setMetadata(metadata);
 
         return response;
     }

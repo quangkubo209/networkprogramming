@@ -1,16 +1,23 @@
 package com.example.demotest.controller;
+import com.example.demotest.request.BookMeetingRequest;
+import com.example.demotest.request.CancelMeetingRequest;
 import com.example.demotest.request.ViewAvailableTimeSlotsRequest;
 import com.example.demotest.request.ViewWeeklyAppointmentsRequest;
 import com.example.demotest.response.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import java.util.*;
 import java.util.List;
 
 @RestController
 public class StudentController {
+
+    @Autowired
+    private SimpleMessagingTemplate messageTemplate;
 
     @PostMapping("/view-available-time-slots")
     public ViewAvailableTimeSlotsResponse viewAvailableTimeSlots(@RequestBody ViewAvailableTimeSlotsRequest request) {
@@ -35,6 +42,8 @@ public class StudentController {
         metadata.setTotalPage(1);
         metadata.setTotalRow(10);
         response.setMetadata(metadata);
+
+        messageTemplate
 
         return response;
     }
