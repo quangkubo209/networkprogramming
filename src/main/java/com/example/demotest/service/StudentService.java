@@ -28,8 +28,8 @@ public class StudentService {
     private MeetingRepository meetingRepository;
 
     public ViewAvailableTimeSlotsResponse viewAvailableTimeSlots(ViewAvailableTimeSlotsRequest request) {
-        int page = Integer.parseInt(request.getPage()) - 1; // Giảm đi 1 vì PageRequest bắt đầu từ 0
-        int size = Integer.parseInt(request.getSize());
+        int page = (request.getPage()) - 1; // Giảm đi 1 vì PageRequest bắt đầu từ 0
+        int size = (request.getSize());
 
         Page<Meeting> meetingPage = meetingRepository.findAvailableTimeSlots(
                 request.getSearch(), (Pageable) PageRequest.of(page, size));
@@ -47,8 +47,8 @@ public class StudentService {
     }
 
     public ViewWeeklyAppointmentsResponse viewWeeklyAppointments(ViewWeeklyAppointmentsRequest request) {
-        int page = Integer.parseInt(request.getPage()) - 1; // Giảm đi 1 vì PageRequest bắt đầu từ 0
-        int size = Integer.parseInt(request.getSize());
+        int page = (request.getPage()) - 1; // Giảm đi 1 vì PageRequest bắt đầu từ 0
+        int size = (request.getSize());
 
         Page<Meeting> meetingPage = meetingRepository.findWeeklyAppointments(
                 request.getStartTime(), request.getEndTime(), (Pageable) PageRequest.of(page, size));

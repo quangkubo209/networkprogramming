@@ -29,7 +29,7 @@ public class ViewWeeklyAppointmentsRequest {
         this.sort = sort;
     }
 
-    public String getSize() {
+    public int getSize() {
         return size;
     }
 
@@ -37,7 +37,7 @@ public class ViewWeeklyAppointmentsRequest {
         this.size = size;
     }
 
-    public String getPage() {
+    public int getPage() {
         return page;
     }
 

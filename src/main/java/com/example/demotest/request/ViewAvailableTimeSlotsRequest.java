@@ -18,7 +18,7 @@ public class ViewAvailableTimeSlotsRequest {
         this.sort = sort;
     }
 
-    public String getSize() {
+    public int getSize() {
         return size;
     }
 
@@ -26,7 +26,7 @@ public class ViewAvailableTimeSlotsRequest {
         this.size = size;
     }
 
-    public String getPage() {
+    public int getPage() {
         return page;
     }
 
