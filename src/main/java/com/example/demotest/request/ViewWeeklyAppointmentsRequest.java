@@ -1,21 +1,23 @@
 package com.example.demotest.request;
 
+import java.time.LocalDateTime;
+
 // Request
 public class ViewWeeklyAppointmentsRequest {
     private String action;
-    private String startTime;
-    private String endTime;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
     private int page;
     private int size;
     private String sort;
 
     // Getters and setters
 
-    public String getStartTime() {
+    public LocalDateTime getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(String startTime) {
+    public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
     }
 
@@ -27,7 +29,7 @@ public class ViewWeeklyAppointmentsRequest {
         this.sort = sort;
     }
 
-    public int getSize() {
+    public String getSize() {
         return size;
     }
 
@@ -35,7 +37,7 @@ public class ViewWeeklyAppointmentsRequest {
         this.size = size;
     }
 
-    public int getPage() {
+    public String getPage() {
         return page;
     }
 
@@ -43,11 +45,11 @@ public class ViewWeeklyAppointmentsRequest {
         this.page = page;
     }
 
-    public String getEndTime() {
+    public LocalDateTime getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(String endTime) {
+    public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
     }
 

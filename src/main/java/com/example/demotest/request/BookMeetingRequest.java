@@ -11,15 +11,15 @@ public class BookMeetingRequest {
         this.action = action;
     }
 
-    public String getMeetingId() {
+    public Long getMeetingId() {
         return meetingId;
     }
 
-    public void setMeetingId(String meetingId) {
+    public void setMeetingId(Long meetingId) {
         this.meetingId = meetingId;
     }
 
-    private String meetingId;
+    private Long meetingId;
 
     // Getters and setters
 }

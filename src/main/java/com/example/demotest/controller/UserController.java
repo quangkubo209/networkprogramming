@@ -1,55 +1,58 @@
 package com.example.demotest.controller;
 
 import com.example.demotest.model.User;
+import com.example.demotest.repository.UserRepository;
 import com.example.demotest.request.LoginRequest;
 import com.example.demotest.request.LogoutRequest;
+import com.example.demotest.request.RegisterRequest;
 import com.example.demotest.response.LogoutResponse;
 import com.example.demotest.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.*;
 
 @RestController
 @RequestMapping("/user")
 public class UserController {
-
-    private final UserService userService;
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
+    private UserService userService;
+
+    @GetMapping("/getAllUser")
+    public List<User> getAllUsers(){
+        return userRepository.findAll();
     }
 
-    @PostMapping("/signup")
-    public ResponseEntity<String> signUp(@RequestBody User user) {
-        // Validate and process user registration
-        userService.signUp(user);
-        return ResponseEntity.ok("User registered successfully!");
+    @PostMapping("/create")
+    public User createUser(@RequestBody User user) {
+        return userRepository.save(user);
     }
 
-    @PostMapping("/signin")
-    public ResponseEntity<String> signIn(@RequestBody LoginRequest loginRequest) {
-        // Validate and process user login
-        String token = userService.signIn(loginRequest.getUsername(), loginRequest.getPassword());
-        return ResponseEntity.ok(token);
+    @MessageMapping("register")
+    @SendTo("topic/registration")
+    public ResponseEntity<String> registration(RegisterRequest request){
+        return userService.register(request);
     }
 
-    @PostMapping("/logout")
-    public LogoutResponse logout(@RequestBody LogoutRequest request) {
-        // Thực hiện logic đăng xuất, ví dụ: kiểm tra session trong sessionDatabase
-        if (sessionDatabase.containsKey(request.getSession())) {
-            // Đăng xuất thành công
-            sessionDatabase.remove(request.getSession());
-            LogoutResponse response = new LogoutResponse();
-            response.setCode("LOGOUT_OK");
-            return response;
-        } else {
-            // Session không hợp lệ
-            LogoutResponse response = new LogoutResponse();
-            response.setCode("UNAUTHORIZED");
-            return response;
-        }
+    @MessageMapping("/login")
+    @SendTo("/topic/authentication")
+    public ResponseEntity<String> login(LoginRequest request) {
+        // Xử lý yêu cầu đăng nhập và gửi phản hồi đến người gửi
+        return userService.login(request);
     }
 
+    @MessageMapping("/logout")
+    @SendTo("/topic/authentication")
+    public ResponseEntity<String> logout(LogoutRequest request) {
+        // Xử lý yêu cầu đăng xuất và gửi phản hồi đến người gửi
+        return userService.logout(request);
+    }
+}
 
-// Other endpoints for user
+

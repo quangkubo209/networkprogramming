@@ -2,70 +2,72 @@ package com.example.demotest.service;
 
 import com.example.demotest.model.User;
 import com.example.demotest.repository.UserRepository;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import com.example.demotest.request.LoginRequest;
+import com.example.demotest.request.LogoutRequest;
+import com.example.demotest.request.RegisterRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.Optional;
 
 @Service
 public class UserService {
 
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
+    private UserRepository userRepository;
+
+    public ResponseEntity<String> register(RegisterRequest request){
+        if(userRepository.existsByUsername((request.getUsername()))){
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("{\"code\":\"REGISTER_CONFLICT\",\"error_message\":\"username is existed\"}");
+        }
+
+        if(!isValidRole(request.getRole())){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("{\"code\":\"REGISTER_NOT_FOUND\",\"error_message\":\"role is invalid\"}");
+
+        }
+        User newUser = new User();
+        newUser.setUsername(request.getUsername());
+        newUser.setPassword(request.getPassword());
+        newUser.setFullname(request.getFullname());
+        newUser.setRole(request.getRole());
+
+        userRepository.save(newUser);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body("{\"code\":\"REGISTER_CREATED\",\"session\":\"example\"}");
     }
 
-    public void signUp(User user) {
-        // Validate and save user registration
-        if (user == null || user.getUsername() == null || user.getPassword() == null) {
-            throw new IllegalArgumentException("Invalid user data");
-        }
-
-        if (userRepository.existsByUsername(user.getUsername())) {
-            throw new IllegalStateException("Username already exists");
-        }
-
-        user.setRole("STUDENT"); // Assuming the default role is "STUDENT"
-        String encodedPassword = passwordEncoder.encode(user.getPassword());
-        user.setPassword(encodedPassword);
-        userRepository.save(user);
+    private boolean isValidRole(String role) {
+        return "teacher".equals(role) || "student".equals(role);
     }
 
-    public String signIn(String username, String password) {
-        // Validate user login credentials
-        if (username == null || password == null) {
-            throw new IllegalArgumentException("Invalid login credentials");
-        }
+    public ResponseEntity<String> login(LoginRequest request) {
+        // Tìm kiếm người dùng trong cơ sở dữ liệu
+        Optional<User> userOptional = userRepository.findByUsernameAndPassword(request.getUsername(), request.getPassword());
 
-        Optional<User> userOptional = userRepository.findByUsername(username);
-
-        if (userOptional.isPresent() && passwordEncoder.matches(password, userOptional.get().getPassword())) {
-            // If credentials are valid, return a token or user identifier
-            return generateToken(username, userOptional.get().getRole());
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            // Đăng nhập thành công, trả về thông tin đăng nhập
+            return ResponseEntity.ok("{\"code\":\"LOGIN_OK\",\"fullname\":\"" + user.getFullname() + "\",\"role\":\"" + user.getRole() + "\"}");
         } else {
-            // If credentials are invalid, you can handle it accordingly
-            return null;
+            // Đăng nhập thất bại
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("{\"code\":\"UNAUTHORIZED\",\"error_message\":\"username or password is incorrect\"}");
         }
     }
 
-    private String generateToken(String username, String role) {
-        long validityInMilliseconds = 1800000; // 30 minutes
+    public ResponseEntity<String> logout(LogoutRequest request) {
+        // Xử lý đăng xuất, ví dụ: hủy phiên làm việc
+        // ...
 
-        // Tạo JWT token
-        return Jwts.builder()
-                .setSubject(username)
-                .claim("role", role)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + validityInMilliseconds))
-                .signWith(SignatureAlgorithm.HS256, "kuboSecret9898")
-                .compact();
+        // Trả về phản hồi đăng xuất thành công
+        return ResponseEntity.ok("{\"code\":\"LOGOUT_OK\"}");
     }
+
+
+
 }

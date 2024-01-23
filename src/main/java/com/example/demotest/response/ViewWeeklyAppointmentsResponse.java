@@ -5,13 +5,13 @@ import java.util.List;
 // Response
 public class ViewWeeklyAppointmentsResponse {
     private String code;
-    private List<Appointment> lists;
+    private List<TimeSlot> lists;
 
-    public List<Appointment> getLists() {
+    public List<TimeSlot> getLists() {
         return lists;
     }
 
-    public void setLists(List<Appointment> lists) {
+    public void setLists(List<TimeSlot> lists) {
         this.lists = lists;
     }
 

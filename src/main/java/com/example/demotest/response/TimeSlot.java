@@ -1,17 +1,21 @@
 package com.example.demotest.response;
 
+import org.apache.tomcat.jni.Local;
+
+import java.time.LocalDateTime;
+
 public class TimeSlot {
-    private String meetingId;
-    private String startTime;
-    private String endTime;
+    private Long meetingId;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
     private String slotType;
     private int remainingSlot;
 
-    public String getStartTime() {
+    public LocalDateTime getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(String startTime) {
+    public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
     }
 
@@ -23,11 +27,11 @@ public class TimeSlot {
         this.slotType = slotType;
     }
 
-    public String getMeetingId() {
+    public Long getMeetingId() {
         return meetingId;
     }
 
-    public void setMeetingId(String meetingId) {
+    public void setMeetingId(Long meetingId) {
         this.meetingId = meetingId;
     }
 
@@ -39,11 +43,12 @@ public class TimeSlot {
         this.remainingSlot = remainingSlot;
     }
 
-    public String getEndTime() {
+
+    public LocalDateTime getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(String endTime) {
+    public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
     }
 // Getters and setters
