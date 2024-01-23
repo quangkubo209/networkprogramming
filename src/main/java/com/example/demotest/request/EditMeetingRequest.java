@@ -2,7 +2,18 @@ package com.example.demotest.request;
 
 public class EditMeetingRequest {
     private String action;
-    private String userId;
+    private Long userId;
+
+    private Long meetingId;
+
+    public Long getMeetingId() {
+        return meetingId;
+    }
+
+    public void setMeetingId(Long meetingId) {
+        this.meetingId = meetingId;
+    }
+
     private MeetingInformation meetingInformation;
 
     public MeetingInformation getMeetingInformation() {
@@ -13,11 +24,11 @@ public class EditMeetingRequest {
         this.meetingInformation = meetingInformation;
     }
 
-    public String getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 

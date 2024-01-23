@@ -2,13 +2,13 @@ package com.example.demotest.request;
 
 public class DeclareSlotsRequest {
     private String action;
-    private String userId;
+    private Long userId;
 
-    public String getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
@@ -29,6 +29,7 @@ public class DeclareSlotsRequest {
     }
 
     private MeetingInformation meetingInformation;
+
 
     // Getters and setters
 }

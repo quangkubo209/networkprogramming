@@ -13,11 +13,11 @@ public class ViewScheduleResponse {
         this.metadata = metadata;
     }
 
-    public List<ScheduledMeeting> getLists() {
+    public List<TimeSlot> getLists() {
         return lists;
     }
 
-    public void setLists(List<ScheduledMeeting> lists) {
+    public void setLists(List<TimeSlot> lists) {
         this.lists = lists;
     }
 
@@ -29,7 +29,7 @@ public class ViewScheduleResponse {
         this.code = code;
     }
 
-    private List<ScheduledMeeting> lists;
+    private List<TimeSlot> lists;
     private Metadata metadata;
 
     // Getters and setters

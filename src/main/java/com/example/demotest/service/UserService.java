@@ -51,10 +51,10 @@ public class UserService {
 
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            // Đăng nhập thành công, trả về thông tin đăng nhập
+            // log in successfully
             return ResponseEntity.ok("{\"code\":\"LOGIN_OK\",\"fullname\":\"" + user.getFullname() + "\",\"role\":\"" + user.getRole() + "\"}");
         } else {
-            // Đăng nhập thất bại
+            // login failed
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body("{\"code\":\"UNAUTHORIZED\",\"error_message\":\"username or password is incorrect\"}");
         }

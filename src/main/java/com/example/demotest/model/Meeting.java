@@ -5,6 +5,7 @@ import lombok.Getter;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "meeting")
@@ -17,7 +18,7 @@ public class Meeting {
 
     @ManyToOne
     @JoinColumn(name = "teacher_id")
-    private User teacher;
+    private Long teacherId;
 
     @Column(name = "start_time")
     private LocalDateTime startTime;
@@ -37,6 +38,30 @@ public class Meeting {
     @Column(name = "slot_available")
     private int slotAvailable;
 
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "meeting")
+    private MeetingMinutes meetingMinutes;
+
+    @OneToMany(mappedBy = "meeting", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MeetingParticipant> meetingParticipants;
+
+    public List<MeetingParticipant> getMeetingParticipants() {
+        return meetingParticipants;
+    }
+
+    // Phương thức setter cho meetingParticipants
+    public void setMeetingParticipants(List<MeetingParticipant> meetingParticipants) {
+        this.meetingParticipants = meetingParticipants;
+    }
+
+
+    public MeetingMinutes getMeetingMinutes() {
+        return meetingMinutes;
+    }
+
+    public void setMeetingMinutes(MeetingMinutes meetingMinutes) {
+        this.meetingMinutes = meetingMinutes;
+    }
+
     private LocalDate date;
 
     public void setId(Long id) {
@@ -47,12 +72,13 @@ public class Meeting {
         return id;
     }
 
-    public User getTeacher() {
-        return teacher;
+
+    public Long getTeacherId() {
+        return teacherId;
     }
 
-    public void setTeacher(User teacher) {
-        this.teacher = teacher;
+    public void setTeacherId(Long teacherId) {
+        this.teacherId = teacherId;
     }
 
     public LocalDateTime getStartTime() {
@@ -94,5 +120,6 @@ public class Meeting {
     public void setDate(LocalDate date) {
         this.date = date;
     }
+
     // getters and setters
 }

@@ -28,4 +28,18 @@ public interface MeetingRepository extends JpaRepository<Meeting, Long> {
             @Param("startTime") LocalDateTime startTime,
             @Param("endTime") LocalDateTime endTime,
             Pageable pageable);
+
+    @Query("SELECT m FROM Meeting m " +
+            "WHERE m.session = :session " +
+            "ORDER BY m.createdAt ASC")
+    Page<Meeting> findSchedule(
+            @Param("session") String session,
+            Pageable pageable);
+
+    @Query("SELECT m FROM Meeting m WHERE m.session = :session AND m.slotType = :meetingType AND m.endTime < CURRENT_TIMESTAMP")
+    Page<Meeting> findHistorySchedule(
+            @Param("session") String session,
+            @Param("meetingType") String meetingType,
+            Pageable pageable
+    );
 }
