@@ -1,7 +1,9 @@
 package com.example.demotest.service;
 
 import com.example.demotest.model.User;
+import com.example.demotest.model.UserSessions;
 import com.example.demotest.repository.UserRepository;
+import com.example.demotest.repository.UserSessionsRepository;
 import com.example.demotest.request.LoginRequest;
 import com.example.demotest.request.LogoutRequest;
 import com.example.demotest.request.RegisterRequest;
@@ -10,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -17,6 +20,9 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserSessionsRepository userSessionsRepository;
 
     public ResponseEntity<String> register(RegisterRequest request){
         if(userRepository.existsByUsername((request.getUsername()))){
@@ -46,7 +52,6 @@ public class UserService {
     }
 
     public ResponseEntity<String> login(LoginRequest request) {
-        // Tìm kiếm người dùng trong cơ sở dữ liệu
         Optional<User> userOptional = userRepository.findByUsernameAndPassword(request.getUsername(), request.getPassword());
 
         if (userOptional.isPresent()) {
@@ -61,11 +66,20 @@ public class UserService {
     }
 
     public ResponseEntity<String> logout(LogoutRequest request) {
-        // Xử lý đăng xuất, ví dụ: hủy phiên làm việc
-        // ...
+        // Tìm phiên làm việc dựa trên sessionKey
+        UserSessions userSession = userSessionsRepository.findBySessionKey(request.getSession());
 
-        // Trả về phản hồi đăng xuất thành công
-        return ResponseEntity.ok("{\"code\":\"LOGOUT_OK\"}");
+        if (userSession != null) {
+            // Hủy phiên làm việc bằng cách đặt expiresAt là thời điểm hiện tại hoặc một giá trị tương lai
+            userSession.setExpiresAt(LocalDateTime.now().plusMinutes(30)); // Ví dụ: hủy sau 30 phút
+            userSessionsRepository.save(userSession);
+
+            // log out success
+            return ResponseEntity.ok("{\"code\":\"LOGOUT_OK\"}");
+        } else {
+            //session not found
+            return ResponseEntity.status(401).body("{\"code\":\"LOGOUT_FAILED\", \"message\":\"Session not found\"}");
+        }
     }
 
 
