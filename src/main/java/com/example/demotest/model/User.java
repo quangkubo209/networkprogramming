@@ -1,53 +1,48 @@
 package com.example.demotest.model;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "users")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
 
     @Getter
+    @Setter
     private String username;
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     @Getter
     private String password;
-
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
-    }
-
+    private String role;
     @Getter
     private String fullname;
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    @Getter
-    private String role;
 
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
+
+    @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL)
+    private List<Meeting> meetings;
+
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
+    private List<MeetingParticipant> meetingParticipans;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<UserSessions> userSessions;
+
+
 
     public User() {
     }

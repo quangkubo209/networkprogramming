@@ -52,9 +52,12 @@ public class TeacherService {
 
         LocalDateTime startTime = LocalDateTime.parse(meetingInfo.getStartTime());
         LocalDateTime endTime = LocalDateTime.parse(meetingInfo.getEndTime());
+        User user = userRepository.findById(userId).orElse(new User());
+
+        // Now you can use the 'user' object as needed
 
         Meeting meeting = new Meeting();
-        meeting.setTeacherId(userId);
+        meeting.setTeacher(user);
         meeting.setStartTime(startTime);
         meeting.setEndTime(endTime);
         meeting.setSlotType(meetingInfo.getMeetingType());
@@ -85,7 +88,7 @@ public class TeacherService {
 
         if (optionalMeeting.isPresent()) {
             Meeting meeting = optionalMeeting.get();
-            if (meeting.getTeacherId().equals(userId)) {
+            if (meeting.getTeacher().getId().equals(userId)) {
                 meeting.setStartTime(startTime);
                 meeting.setEndTime(endTime);
                 meeting.setSlotType(meetingInfo.getMeetingType());
@@ -153,7 +156,7 @@ public class TeacherService {
     //Lấy ra danh sách tên học sinh từ danh sách students
     private List<String> mapStudentList(List<MeetingParticipant> meetingParticipants, UserRepository studentRepository) {
         return meetingParticipants.stream()
-                .map(participant -> getStudentNameById(participant.getStudent_id(), studentRepository))
+                .map(participant -> getStudentNameById(participant.getStudent().getId(), studentRepository))
                 .collect(Collectors.toList());
     }
 

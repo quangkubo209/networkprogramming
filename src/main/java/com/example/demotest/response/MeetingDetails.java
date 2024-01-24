@@ -41,7 +41,7 @@ public class MeetingDetails {
 
     private List<String> mapStudentList(List<MeetingParticipant> meetingParticipants, UserRepository studentRepository) {
         return meetingParticipants.stream()
-                .map(participant -> getStudentNameById(participant.getStudent_id(), studentRepository))
+                .map(participant -> getStudentNameById(participant.getStudent().getId(), studentRepository))
                 .collect(Collectors.toList());
     }
 

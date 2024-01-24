@@ -13,7 +13,7 @@ import java.util.List;
 public interface MeetingRepository extends JpaRepository<Meeting, Long> {
 
     @Query("SELECT m FROM Meeting m " +
-            "WHERE m.teacherName = :teacherName " +
+            "WHERE m.teacher.fullname = :teacherName " +
             "AND m.startTime >= current_timestamp " +
             "ORDER BY m.createdAt ASC")
     Page<Meeting> findAvailableTimeSlots(
@@ -29,17 +29,28 @@ public interface MeetingRepository extends JpaRepository<Meeting, Long> {
             @Param("endTime") LocalDateTime endTime,
             Pageable pageable);
 
-    @Query("SELECT m FROM Meeting m " +
-            "WHERE m.session = :session " +
-            "ORDER BY m.createdAt ASC")
-    Page<Meeting> findSchedule(
-            @Param("session") String session,
-            Pageable pageable);
 
-    @Query("SELECT m FROM Meeting m WHERE m.session = :session AND m.slotType = :meetingType AND m.endTime < CURRENT_TIMESTAMP")
-    Page<Meeting> findHistorySchedule(
-            @Param("session") String session,
-            @Param("meetingType") String meetingType,
-            Pageable pageable
-    );
+    @Query("SELECT m FROM Meeting m " +
+            "JOIN m.teacher t " +
+            "JOIN t.userSessions us " +
+            "WHERE us.sessionKey = :session " +
+            "ORDER BY m.createdAt ASC")
+    Page<Meeting> findSchedule(@Param("session") String session, Pageable pageable);
+
+
+@Query("SELECT m FROM Meeting m " +
+        "JOIN m.teacher t " +
+        "JOIN t.userSessions us " +
+        "WHERE us.sessionKey = :session " +
+        "AND m.slotType = :meetingType " +
+        "AND m.endTime < CURRENT_TIMESTAMP " +
+        "ORDER BY m.endTime DESC")
+Page<Meeting> findHistorySchedule(
+        @Param("session") String session,
+        @Param("meetingType") String meetingType,
+        Pageable pageable
+);
+
+
+
 }
